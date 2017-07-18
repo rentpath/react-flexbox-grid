@@ -21,30 +21,33 @@ const propTypes = {
   children: PropTypes.node
 };
 
-function getRowClassNames(props) {
-  const modificators = [props.className, getClass('row')];
+function getRowClassNames(props, localCss) {
+  const modificators = [props.className, getClass('row', localCss)];
 
   for (let i = 0; i < rowKeys.length; ++i) {
     const key = rowKeys[i];
     const value = props[key];
     if (value) {
-      modificators.push(getClass(`${key}-${value}`));
+      modificators.push(getClass(`${key}-${value}`, localCss));
     }
   }
 
   if (props.reverse) {
-    modificators.push(getClass('reverse'));
+    modificators.push(getClass('reverse', localCss));
   }
 
   return modificators;
 }
 
-export function getRowProps(props) {
-  return createProps(propTypes, props, getRowClassNames(props));
+export function getRowProps(props, localCss) {
+  return createProps(propTypes, props, getRowClassNames(props, localCss));
 }
 
-export default function Row(props) {
-  return React.createElement(props.tagName || 'div', getRowProps(props));
+function Row(props) {
+  return React.createElement(props.tagName || 'div', getRowProps(props, Row.localCss));
 }
 
+Row.localCss = {}
 Row.propTypes = propTypes;
+
+export default Row

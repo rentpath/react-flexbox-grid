@@ -10,11 +10,12 @@ const propTypes = {
   children: PropTypes.node
 };
 
-export default function Grid(props) {
-  const containerClass = getClass(props.fluid ? 'container-fluid' : 'container');
+function Grid(props) {
+  const containerClass = getClass(props.fluid ? 'container-fluid' : 'container', Grid.localCss);
   const classNames = [props.className, containerClass];
-
   return React.createElement(props.tagName || 'div', createProps(propTypes, props, classNames));
 }
 
+Grid.localCss = {}
 Grid.propTypes = propTypes;
+export default Grid

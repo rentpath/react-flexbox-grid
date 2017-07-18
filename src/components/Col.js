@@ -35,7 +35,7 @@ function isInteger(value) {
   return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
 }
 
-function getColClassNames(props) {
+function getColClassNames(props, localCss) {
   const extraClasses = [];
 
   if (props.className) {
@@ -43,26 +43,28 @@ function getColClassNames(props) {
   }
 
   if (props.first) {
-    extraClasses.push(getClass('first-' + props.first));
+    extraClasses.push(getClass('first-' + props.first, localCss));
   }
 
   if (props.last) {
-    extraClasses.push(getClass('last-' + props.last));
+    extraClasses.push(getClass('last-' + props.last, localCss));
   }
 
   return Object.keys(props)
     .filter(key => classMap[key])
-    .map(key => getClass(isInteger(props[key]) ? (classMap[key] + '-' + props[key]) : classMap[key]))
+    .map(key => getClass((isInteger(props[key]) ? (classMap[key] + '-' + props[key]) : classMap[key]), localCss))
     .concat(extraClasses);
 }
 
-export function getColumnProps(props) {
-  return createProps(propTypes, props, getColClassNames(props));
+export function getColumnProps(props, localCss) {
+  return createProps(propTypes, props, getColClassNames(props, localCss));
 }
 
-export default function Col(props) {
+function Col(props) {
   const { tagName, ...columnProps } = props;
-  return React.createElement(tagName || 'div', getColumnProps(columnProps));
+  return React.createElement(tagName || 'div', getColumnProps(columnProps, Col.localCss));
 }
 
+Col.localCss = {}
 Col.propTypes = propTypes;
+export default Col
